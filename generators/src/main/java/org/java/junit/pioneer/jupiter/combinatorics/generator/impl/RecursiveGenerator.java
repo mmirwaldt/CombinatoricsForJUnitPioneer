@@ -20,14 +20,14 @@ public class RecursiveGenerator implements CombinatoricsGenerator {
     @Override
     public <E> Set<List<E>> variateWithoutRepetition(Set<E> elements, int length) {
         Set<List<E>> result = new HashSet<>();
-        variateWithoutRepetition(elements, length, new ArrayDeque<>(), result);
+        RecursiveVariator.variateWithoutRepetition(elements, length, new ArrayDeque<>(), result);
         return result;
     }
 
     @Override
     public <E> Set<List<E>> variateWithRepetition(Set<E> elements, int length) {
         Set<List<E>> result = new HashSet<>();
-        variateWithRepetition(elements, length, new ArrayDeque<>(), result);
+        RecursiveVariator.variateWithRepetition(elements, length, new ArrayDeque<>(), result);
         return result;
     }
 
@@ -43,33 +43,6 @@ public class RecursiveGenerator implements CombinatoricsGenerator {
         Set<Map<E, Integer>> result = new HashSet<>();
         combineWithRepetition(List.copyOf(elements), length, new HashMap<>(), 0, result);
         return result;
-    }
-
-    public <E> void variateWithRepetition(Set<E> elements, int k, Deque<E> variation, Set<List<E>> results) {
-        if (variation.size() == k) {
-            results.add(new ArrayList<>(variation));
-        } else {
-            for (E element : elements) {
-                variation.push(element);
-                variateWithRepetition(elements, k, variation, results);
-                variation.pop();
-            }
-        }
-    }
-
-    public <E> void variateWithoutRepetition(Set<E> elements, int k, Deque<E> variation, Set<List<E>> results) {
-        if (variation.size() == k) {
-            results.add(new ArrayList<>(variation));
-        } else {
-            Set<E> remainingElements = new HashSet<>(elements);
-            for (E element : elements) {
-                remainingElements.remove(element);
-                variation.push(element);
-                variateWithoutRepetition(remainingElements, k, variation, results);
-                variation.pop();
-                remainingElements.add(element);
-            }
-        }
     }
 
     public <E> void combineWithRepetition(List<E> elements, int k, Map<E, Integer> combination, int size, Set<Map<E, Integer>> results) {
