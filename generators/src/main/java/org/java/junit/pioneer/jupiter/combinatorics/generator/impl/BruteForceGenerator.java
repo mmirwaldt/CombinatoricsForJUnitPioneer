@@ -21,15 +21,13 @@ public class BruteForceGenerator implements CombinatoricsGenerator {
     @Override
     public <E> Set<List<E>> permutateWithRepetition(Map<E, Integer> elementsWithFrequencies) {
         // See the comment in permutateWithRepetition() in LoopingPermutator for the basic idea
-        Map<E, Long> elementsWithFrequenciesAsLongs = elementsWithFrequencies.entrySet()
-                .stream().collect(toMap(Map.Entry::getKey, entry -> (long) entry.getValue()));
         List<E> elements = elementsWithFrequencies.entrySet().stream()
                 .flatMap(entry -> nCopies(entry.getValue(), entry.getKey()).stream())
                 .collect(Collectors.toList());
         List<List<E>> result = new ArrayList<>(variateWithRepetition(elements, elements.size()));
         Set<List<E>> resultAsSet = new HashSet<>(result);
-        resultAsSet.removeIf(list -> !list.stream().collect(groupingBy(e -> e, counting()))
-                .equals(elementsWithFrequenciesAsLongs));
+        resultAsSet.removeIf(list -> !list.stream().collect(groupingBy(e -> e, summingInt(e -> 1)))
+                .equals(elementsWithFrequencies));
         return resultAsSet;
     }
 
@@ -42,7 +40,7 @@ public class BruteForceGenerator implements CombinatoricsGenerator {
 
     @Override
     public <E> Set<List<E>> variateWithRepetition(Set<E> elements, int length) {
-        return variateWithRepetition(new ArrayList<>(elements), length);
+        return LoopingVariator.variate(elements, length, true);
     }
 
     private static <E> Set<List<E>> variateWithRepetition(List<E> elements, int length) {
