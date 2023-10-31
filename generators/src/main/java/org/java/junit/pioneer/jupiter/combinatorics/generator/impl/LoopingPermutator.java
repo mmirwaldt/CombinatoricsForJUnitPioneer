@@ -1,18 +1,10 @@
 package org.java.junit.pioneer.jupiter.combinatorics.generator.impl;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-public class LoopingPermutator<E> {
-    private final static LoopingCombiner<Integer, Set<Integer>> loopingCombiner = createCombiner();
-
+public class LoopingPermutator<E> extends AbstractPermutator<E> {
     private E element;
     private int frequency;
-    private Set<Integer> allPositions;
 
     /*
         The basic idea behind this algorithm here is to use combinations to avoid duplicates.
@@ -34,16 +26,13 @@ public class LoopingPermutator<E> {
         ["A", "B", "A", "B", 4, "B", 6] for LB1 = [1, 3, 5]  and finally ["A", "B", "A", "B", "C", "B", ""C"] for LC = [4, 6]
         which leads to "ABABCBC".
          */
-    public Set<List<E>> permutateWithRepetition(Map<E, Integer> elementsWithFrequencies) {
-        int length = elementsWithFrequencies.values().stream().mapToInt(i -> i).sum();
-        allPositions = IntStream.range(0, length).boxed().collect(Collectors.toSet());
-
+    public Set<List<E>> permutate(Map<E, Integer> elementsWithFrequencies) {
         /*
         Each element of the list is a permutation represented by a map with the elements as keys and the positions as elements.
          */
         List<Map<E, Set<Integer>>> permutationMaps = generatePermutationMaps(elementsWithFrequencies);
 
-        return generatePermutationsFromMaps(length, permutationMaps);
+        return generatePermutationsFromMaps(permutationMaps);
     }
 
     private List<Map<E, Set<Integer>>> generatePermutationMaps(Map<E, Integer> elementsWithFrequencies) {
@@ -63,12 +52,12 @@ public class LoopingPermutator<E> {
         List<Map<E, Set<Integer>>> newPermutationMaps = new ArrayList<>();
         for (Map<E, Set<Integer>> permutationMap : permutationMaps) {
             Set<Integer> unusedPositions = unusedPositionsInPermutation(permutationMap, allPositions);
-            Set<Set<Integer>> positionCombinations =
+            Set<Set<Integer>> combinations =
                     loopingCombiner.combine(unusedPositions, frequency, false);
 
-            for (Set<Integer> positionCombination : positionCombinations) {
+            for (Set<Integer> combination : combinations) {
                 Map<E, Set<Integer>> newPermutationMap =
-                        createNewPermutationMap(permutationMap, positionCombination, element);
+                        createNewPermutationMap(permutationMap, combination, element);
                 newPermutationMaps.add(newPermutationMap);
             }
         }
@@ -81,24 +70,10 @@ public class LoopingPermutator<E> {
         return permutationMap;
     }
 
-    private static LoopingCombiner<Integer, Set<Integer>> createCombiner() {
-        Supplier<Set<Integer>> supplier = HashSet::new;
-        Function<Set<Integer>, Set<Integer>> copyFactory = HashSet::new;
-        BiConsumer<Integer, Set<Integer>> elementConsumer = (e, set) -> set.add(e);
-        return new LoopingCombiner<>(supplier, copyFactory, elementConsumer);
-    }
-
-    private static <E> Set<List<E>> generatePermutationsFromMaps(int length, List<Map<E, Set<Integer>>> permutationMaps) {
-        List<E> permutation = new ArrayList<>(Collections.nCopies(length, null));
+    private Set<List<E>> generatePermutationsFromMaps(List<Map<E, Set<Integer>>> permutationMaps) {
         Set<List<E>> result = new HashSet<>();
         for (Map<E, Set<Integer>> permutationMap : permutationMaps) {
-            List<E> newPermutation = new ArrayList<>(permutation);
-            for (Map.Entry<E, Set<Integer>> permutationEntry : permutationMap.entrySet()) {
-                for (int position : permutationEntry.getValue()) {
-                    newPermutation.set(position, permutationEntry.getKey());
-                }
-            }
-            result.add(newPermutation);
+            result.add(generatePermutationFromMap(permutationMap));
         }
         return result;
     }

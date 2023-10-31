@@ -14,15 +14,7 @@ public class RecursiveGenerator implements CombinatoricsGenerator {
 
     @Override
     public <E> Set<List<E>> permutateWithRepetition(Map<E, Integer> elementsWithFrequencies) {
-        // See the comment in permutateWithRepetition() in LoopingPermutator for the basic idea
-        Set<List<E>> result = new HashSet<>();
-        int length = elementsWithFrequencies.values().stream().mapToInt(i -> i).sum();
-        Set<Integer> allPositions = IntStream.range(0, length)
-                .boxed()
-                .collect(Collectors.toSet());
-        permutateWithRepetition(new ArrayList<>(elementsWithFrequencies.entrySet()),
-                allPositions.size(), allPositions, new LinkedHashMap<>(), result);
-        return result;
+        return new RecursivePermutator<E>().permutateWithRepetition(elementsWithFrequencies);
     }
 
     @Override
@@ -106,37 +98,6 @@ public class RecursiveGenerator implements CombinatoricsGenerator {
                 combineWithoutRepetition(remainingElements, k, variation, results);
                 variation.pop();
                 start++;
-            }
-        }
-    }
-
-    public <E> void permutateWithRepetition(
-            List<Map.Entry<E, Integer>> entries,
-            int length,
-            Set<Integer> remainingPositions,
-            Map<E, Set<Integer>> positionsOfElements,
-            Set<List<E>> results) {
-        if (entries.isEmpty()) {
-            List<E> permutation = new ArrayList<>(Collections.nCopies(length, null));
-            for (Map.Entry<E, Set<Integer>> positionEntry : positionsOfElements.entrySet()) {
-                for (int position : positionEntry.getValue()) {
-                    permutation.set(position, positionEntry.getKey());
-                }
-            }
-            results.add(permutation);
-        } else if (entries.size() == 1) {
-            positionsOfElements.put(entries.get(0).getKey(), new HashSet<>(remainingPositions));
-            permutateWithRepetition(Collections.emptyList(), length, remainingPositions, positionsOfElements, results);
-        } else {
-            Map.Entry<E, Integer> entry = entries.get(0);
-            Set<Set<Integer>> combinations =
-                    combineWithoutRepetition(remainingPositions, entry.getValue());
-            for (Set<Integer> combination : combinations) {
-                positionsOfElements.put(entry.getKey(), new HashSet<>(combination));
-                remainingPositions.removeAll(combination);
-                permutateWithRepetition(entries.subList(1, entries.size()), length, remainingPositions, positionsOfElements, results);
-                remainingPositions.addAll(combination);
-                positionsOfElements.remove(entry.getKey());
             }
         }
     }
