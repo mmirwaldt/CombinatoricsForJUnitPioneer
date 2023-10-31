@@ -26,13 +26,13 @@ public class LoopingPermutator<E> extends AbstractPermutator<E> {
         ["A", "B", "A", "B", 4, "B", 6] for LB1 = [1, 3, 5]  and finally ["A", "B", "A", "B", "C", "B", ""C"] for LC = [4, 6]
         which leads to "ABABCBC".
          */
-    public Set<List<E>> permutate(Map<E, Integer> elementsWithFrequencies) {
+    public Set<List<E>> permutate(Map<E, Integer> frequencyMap) {
         /*
         Each element of the list is a permutation represented by a map with the elements as keys and the positions as elements.
          */
-        List<Map<E, Set<Integer>>> permutationMaps = generatePermutationMaps(elementsWithFrequencies);
+        List<Map<E, Set<Integer>>> positionsMaps = generatePermutationMaps(frequencyMap);
 
-        return generatePermutationsFromMaps(permutationMaps);
+        return generatePermutationsFromPositionsMaps(positionsMaps);
     }
 
     private List<Map<E, Set<Integer>>> generatePermutationMaps(Map<E, Integer> elementsWithFrequencies) {
@@ -48,40 +48,41 @@ public class LoopingPermutator<E> extends AbstractPermutator<E> {
         return permutationMaps;
     }
 
-    private List<Map<E, Set<Integer>>> createPermutationMapsForElement(List<Map<E, Set<Integer>>> permutationMaps) {
+    private List<Map<E, Set<Integer>>> createPermutationMapsForElement(List<Map<E, Set<Integer>>> positionsMaps) {
         List<Map<E, Set<Integer>>> newPermutationMaps = new ArrayList<>();
-        for (Map<E, Set<Integer>> permutationMap : permutationMaps) {
-            Set<Integer> unusedPositions = unusedPositionsInPermutation(permutationMap, allPositions);
-            Set<Set<Integer>> combinations =
+        for (Map<E, Set<Integer>> positionsMap : positionsMaps) {
+            Set<Integer> unusedPositions = unusedPositionsInPermutation(positionsMap, allPositions);
+            Set<Set<Integer>> positionsCombinations =
                     loopingCombiner.combine(unusedPositions, frequency, false);
 
-            for (Set<Integer> combination : combinations) {
-                Map<E, Set<Integer>> newPermutationMap =
-                        createNewPermutationMap(permutationMap, combination, element);
-                newPermutationMaps.add(newPermutationMap);
+            for (Set<Integer> positionsCombination : positionsCombinations) {
+                Map<E, Set<Integer>> newPositionsMap =
+                        createNewPositionsMap(positionsMap, positionsCombination, element);
+                newPermutationMaps.add(newPositionsMap);
             }
         }
         return newPermutationMaps;
     }
 
-    private Map<E, Set<Integer>> createNewPermutationMap(Map<E, Set<Integer>> map, Set<Integer> combination, E element) {
-        Map<E, Set<Integer>> permutationMap = new LinkedHashMap<>(map);
+    private Map<E, Set<Integer>> createNewPositionsMap(Map<E, Set<Integer>> positionsMap, Set<Integer> combination, E element) {
+        Map<E, Set<Integer>> permutationMap = new LinkedHashMap<>(positionsMap);
         permutationMap.put(element, combination);
         return permutationMap;
     }
 
-    private Set<List<E>> generatePermutationsFromMaps(List<Map<E, Set<Integer>>> permutationMaps) {
+    private Set<List<E>> generatePermutationsFromPositionsMaps(List<Map<E, Set<Integer>>> positionsMaps) {
         Set<List<E>> result = new HashSet<>();
-        for (Map<E, Set<Integer>> permutationMap : permutationMaps) {
-            result.add(generatePermutationFromMap(permutationMap));
+        for (Map<E, Set<Integer>> positionsMap : positionsMaps) {
+            result.add(generatePermutationFromPositionsMap(positionsMap));
         }
         return result;
     }
 
-    private static <E> Set<Integer> unusedPositionsInPermutation(Map<E, Set<Integer>> map, Set<Integer> allPositions) {
+    private static <E> Set<Integer> unusedPositionsInPermutation(
+            Map<E, Set<Integer>> positionsMap, Set<Integer> allPositions) {
         Set<Integer> unusedPositions = new HashSet<>(allPositions);
-        for (Map.Entry<E, Set<Integer>> mapEntry : map.entrySet()) {
-            unusedPositions.removeAll(mapEntry.getValue());
+        for (Map.Entry<E, Set<Integer>> positionsEntry : positionsMap.entrySet()) {
+            unusedPositions.removeAll(positionsEntry.getValue());
         }
         return unusedPositions;
     }

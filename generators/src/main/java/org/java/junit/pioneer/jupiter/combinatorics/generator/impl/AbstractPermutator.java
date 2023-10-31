@@ -21,18 +21,18 @@ abstract class AbstractPermutator<E> {
         return permutate(elementsWithFrequencies);
     }
 
-    protected abstract Set<List<E>> permutate(Map<E, Integer> elementsWithFrequencies);
+    protected abstract Set<List<E>> permutate(Map<E, Integer> frequencyMap);
 
     private static LoopingCombiner<Integer, Set<Integer>> createCombiner() {
-        Supplier<Set<Integer>> supplier = HashSet::new;
+        Supplier<Set<Integer>> factory = HashSet::new;
         Function<Set<Integer>, Set<Integer>> copyFactory = HashSet::new;
         BiConsumer<Integer, Set<Integer>> elementConsumer = (e, set) -> set.add(e);
-        return new LoopingCombiner<>(supplier, copyFactory, elementConsumer);
+        return new LoopingCombiner<>(factory, copyFactory, elementConsumer);
     }
 
-    protected List<E> generatePermutationFromMap(Map<E, Set<Integer>> positionsOfElements) {
+    protected List<E> generatePermutationFromPositionsMap(Map<E, Set<Integer>> positionsMap) {
         List<E> permutation = new ArrayList<>(Collections.nCopies(length, null));
-        for (Map.Entry<E, Set<Integer>> positionEntry : positionsOfElements.entrySet()) {
+        for (Map.Entry<E, Set<Integer>> positionEntry : positionsMap.entrySet()) {
             for (int position : positionEntry.getValue()) {
                 permutation.set(position, positionEntry.getKey());
             }
