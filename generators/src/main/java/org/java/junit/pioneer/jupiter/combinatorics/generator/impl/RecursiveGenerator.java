@@ -14,7 +14,7 @@ public class RecursiveGenerator implements CombinatoricsGenerator {
 
     @Override
     public <E> Set<List<E>> permutateWithRepetition(Map<E, Integer> elementsWithFrequencies) {
-        // See the comment in permutateWithRepetition() in LoopingGenerator for the basic idea
+        // See the comment in permutateWithRepetition() in LoopingPermutator for the basic idea
         Set<List<E>> result = new HashSet<>();
         int length = elementsWithFrequencies.values().stream().mapToInt(i -> i).sum();
         Set<Integer> allPositions = IntStream.range(0, length)
