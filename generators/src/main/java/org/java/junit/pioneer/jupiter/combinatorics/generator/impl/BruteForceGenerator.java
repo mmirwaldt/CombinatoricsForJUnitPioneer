@@ -7,7 +7,8 @@ import java.util.stream.Collectors;
 
 import static java.lang.Math.multiplyExact;
 import static java.util.Collections.nCopies;
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.summingInt;
 
 /**
  * This implementation is used to compare other implementations regarding correctness of the result and performance.
@@ -20,31 +21,45 @@ public class BruteForceGenerator implements CombinatoricsGenerator {
 
     @Override
     public <E> Set<List<E>> permutateWithRepetition(Map<E, Integer> elementsWithFrequencies) {
-        // See the comment in permutateWithRepetition() in LoopingPermutator for the basic idea
-        List<E> elements = elementsWithFrequencies.entrySet().stream()
-                .flatMap(entry -> nCopies(entry.getValue(), entry.getKey()).stream())
-                .collect(Collectors.toList());
-        List<List<E>> result = new ArrayList<>(variateWithRepetition(elements, elements.size()));
-        Set<List<E>> resultAsSet = new HashSet<>(result);
-        resultAsSet.removeIf(list -> !list.stream().collect(groupingBy(e -> e, summingInt(e -> 1)))
-                .equals(elementsWithFrequencies));
-        return resultAsSet;
+        Set<E> elements = elementsWithFrequencies.keySet();
+        int size = elementsWithFrequencies.values().stream().mapToInt(i -> i).sum();
+        Set<List<E>> permutations = variate(elements, size);
+        return permutations.stream()
+                .filter(permutation -> BruteForceGenerator.toFrequencyMap(permutation).equals(elementsWithFrequencies))
+                .collect(Collectors.toSet());
     }
 
     @Override
     public <E> Set<List<E>> variateWithoutRepetition(Set<E> elements, int length) {
-        Set<List<E>> result = variateWithRepetition(elements, length);
-        result.removeIf(variation -> variation.size() != new TreeSet<>(variation).size());
-        return result;
+        Set<List<E>> results = variateWithRepetition(elements, length);
+        results.removeIf(BruteForceGenerator::hasRepetition);
+        return results;
     }
 
     @Override
     public <E> Set<List<E>> variateWithRepetition(Set<E> elements, int length) {
-        return LoopingVariator.variate(elements, length, true);
+        return variate(elements, length);
     }
 
-    private static <E> Set<List<E>> variateWithRepetition(List<E> elements, int length) {
-        int n = elements.size();
+    @Override
+    public <E> Set<Set<E>> combineWithoutRepetition(Set<E> elements, int length) {
+        Set<List<E>> result = variateWithoutRepetition(elements, length);
+        return result.stream()
+                .map(HashSet::new)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public <E> Set<Map<E, Integer>> combineWithRepetition(Set<E> elements, int length) {
+        Set<List<E>> result = variateWithRepetition(new HashSet<>(elements), length);
+        return result.stream()
+                .map(BruteForceGenerator::toFrequencyMap)
+                .collect(Collectors.toSet());
+    }
+
+    private static <E> Set<List<E>> variate(Collection<E> elements, int length) {
+        List<E> elementsAsList = List.copyOf(elements);
+        int n = elementsAsList.size();
         int totalSize = n;
         for (int i = 1; i < length; i++) {
             totalSize = multiplyExact(totalSize, n);
@@ -55,7 +70,7 @@ public class BruteForceGenerator implements CombinatoricsGenerator {
             int remaining = i;
             for (int j = 0; j < length; j++) {
                 int remainder = remaining % n;
-                variation.set(j, elements.get(remainder));
+                variation.set(j, elementsAsList.get(remainder));
                 remaining = (remaining - remainder) / n;
             }
             result.add(variation);
@@ -63,19 +78,11 @@ public class BruteForceGenerator implements CombinatoricsGenerator {
         return result;
     }
 
-    @Override
-    public <E> Set<Set<E>> combineWithoutRepetition(Set<E> elements, int length) {
-        Set<List<E>> result = variateWithoutRepetition(new HashSet<>(elements), length);
-        return result.stream()
-                .map(HashSet::new)
-                .collect(Collectors.toSet());
+    private static <E> boolean hasRepetition(List<E> variation) {
+        return variation.size() != new HashSet<>(variation).size();
     }
 
-    @Override
-    public <E> Set<Map<E, Integer>> combineWithRepetition(Set<E> elements, int length) {
-        Set<List<E>> result = variateWithRepetition(new HashSet<>(elements), length);
-        return result.stream()
-                .map(list -> list.stream().collect(groupingBy(e -> e, summingInt(first -> 1))))
-                .collect(Collectors.toCollection(HashSet::new));
+    private static <E> Map<E, Integer> toFrequencyMap(List<E> list) {
+        return list.stream().collect(groupingBy(e -> e, summingInt(first -> 1)));
     }
 }
