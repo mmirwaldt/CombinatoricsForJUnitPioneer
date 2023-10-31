@@ -20,6 +20,7 @@ public class BruteForceGenerator implements CombinatoricsGenerator {
 
     @Override
     public <E> Set<List<E>> permutateWithRepetition(Map<E, Integer> elementsWithFrequencies) {
+        // See the comment in permutateWithRepetition() in LoopingGenerator for the basic idea
         Map<E, Long> elementsWithFrequenciesAsLongs = elementsWithFrequencies.entrySet()
                 .stream().collect(toMap(Map.Entry::getKey, entry -> (long) entry.getValue()));
         List<E> elements = elementsWithFrequencies.entrySet().stream()
