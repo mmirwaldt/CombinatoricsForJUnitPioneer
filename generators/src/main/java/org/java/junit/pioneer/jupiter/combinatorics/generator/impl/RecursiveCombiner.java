@@ -3,7 +3,8 @@ package org.java.junit.pioneer.jupiter.combinatorics.generator.impl;
 import java.util.*;
 
 public class RecursiveCombiner {
-    public static <E> void combineWithRepetition(List<E> elements, int k, Map<E, Integer> combination, int size, Set<Map<E, Integer>> results) {
+    public static <E> void combineWithRepetition(
+            List<E> elements, int k, Map<E, Integer> combination, int size, Set<Map<E, Integer>> results) {
         if (size == k) {
             results.add(new HashMap<>(combination));
         } else {
