@@ -1,6 +1,6 @@
 package org.java.junit.pioneer.jupiter.combinatorics.generator.impl;
 
-import org.java.junit.pioneer.jupiter.combinatorics.generator.api.CombinatoricsGenerator;
+import org.java.junit.pioneer.jupiter.combinatorics.generator.api.CombinatorialGenerator;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -13,7 +13,7 @@ import static java.util.stream.Collectors.summingInt;
 /**
  * This implementation is used to compare other implementations regarding correctness of the result and performance.
  */
-public class BruteForceGenerator implements CombinatoricsGenerator {
+public class BruteForceGenerator implements CombinatorialGenerator {
     @Override
     public <E> Set<List<E>> permutateWithoutRepetition(Set<E> elements) {
         return variateWithoutRepetition(elements, elements.size());

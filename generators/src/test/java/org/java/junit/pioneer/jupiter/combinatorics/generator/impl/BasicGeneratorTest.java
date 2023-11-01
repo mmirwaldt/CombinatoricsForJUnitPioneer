@@ -1,6 +1,6 @@
 package org.java.junit.pioneer.jupiter.combinatorics.generator.impl;
 
-import org.java.junit.pioneer.jupiter.combinatorics.generator.api.CombinatoricsGenerator;
+import org.java.junit.pioneer.jupiter.combinatorics.generator.api.CombinatorialGenerator;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -28,7 +28,7 @@ public class BasicGeneratorTest {
     
     @ParameterizedTest
     @MethodSource("generators")
-    void test_permutateWithoutRepetition_2_elements(CombinatoricsGenerator generator) {
+    void test_permutateWithoutRepetition_2_elements(CombinatorialGenerator generator) {
         Set<List<String>> expected = Set.of(
                 List.of("A", "B"),
                 List.of("B", "A"));
@@ -38,7 +38,7 @@ public class BasicGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("generators")
-    void test_permutateWithoutRepetition_3_elements(CombinatoricsGenerator generator) {
+    void test_permutateWithoutRepetition_3_elements(CombinatorialGenerator generator) {
         Set<List<String>> expected = Set.of(
                 List.of("A", "B", "C"),
                 List.of("B", "A", "C"),
@@ -52,7 +52,7 @@ public class BasicGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("generators")
-    void test_permutateWithRepetition_2_elements_frequency_1_and_2(CombinatoricsGenerator generator) {
+    void test_permutateWithRepetition_2_elements_frequency_1_and_2(CombinatorialGenerator generator) {
         Set<List<String>> expected = Set.of(
                 List.of("A", "B", "B"),
                 List.of("B", "A", "B"),
@@ -63,7 +63,7 @@ public class BasicGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("generators")
-    void test_permutateWithRepetition_2_elements_frequency_2_and_2(CombinatoricsGenerator generator) {
+    void test_permutateWithRepetition_2_elements_frequency_2_and_2(CombinatorialGenerator generator) {
         Set<List<String>> expected = Set.of(
                 List.of("A", "A", "B", "B"),
                 List.of("A", "B", "A", "B"),
@@ -77,7 +77,7 @@ public class BasicGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("generators")
-    void test_permutateWithRepetition_2_elements_frequency_1_and_3(CombinatoricsGenerator generator) {
+    void test_permutateWithRepetition_2_elements_frequency_1_and_3(CombinatorialGenerator generator) {
         Set<List<String>> expected = Set.of(
                 List.of("A", "B", "B", "B"),
                 List.of("B", "A", "B", "B"),
@@ -89,7 +89,7 @@ public class BasicGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("generators")
-    void test_permutateWithRepetition_2_elements_frequency_2_and_3(CombinatoricsGenerator generator) {
+    void test_permutateWithRepetition_2_elements_frequency_2_and_3(CombinatorialGenerator generator) {
         Set<List<String>> expected = Set.of(
                 List.of("A", "A", "B", "B", "B"),
                 List.of("A", "B", "A", "B", "B"),
@@ -107,7 +107,7 @@ public class BasicGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("generators")
-    void test_variateWithoutRepetition_with_3_elements_and_length_2(CombinatoricsGenerator generator) {
+    void test_variateWithoutRepetition_with_3_elements_and_length_2(CombinatorialGenerator generator) {
         Set<List<String>> expected = Set.of(
                 List.of("A", "B"),
                 List.of("A", "C"),
@@ -121,7 +121,7 @@ public class BasicGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("generators")
-    void test_variateWithoutRepetition_with_4_elements_and_length_2(CombinatoricsGenerator generator) {
+    void test_variateWithoutRepetition_with_4_elements_and_length_2(CombinatorialGenerator generator) {
         Set<List<String>> expected = Set.of(
                 List.of("A", "B"),
                 List.of("A", "C"),
@@ -141,7 +141,7 @@ public class BasicGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("generators")
-    void test_variateWithoutRepetition_with_4_elements_and_length_3(CombinatoricsGenerator generator) {
+    void test_variateWithoutRepetition_with_4_elements_and_length_3(CombinatorialGenerator generator) {
         Set<List<String>> expected = Set.of(
                 List.of("A", "B", "C"),
                 List.of("A", "B", "D"),
@@ -174,7 +174,7 @@ public class BasicGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("generators")
-    void test_variateWithRepetition_with_2_elements_and_length_2(CombinatoricsGenerator generator) {
+    void test_variateWithRepetition_with_2_elements_and_length_2(CombinatorialGenerator generator) {
         Set<List<String>> expected = Set.of(
                 List.of("A", "A"),
                 List.of("A", "B"),
@@ -187,7 +187,7 @@ public class BasicGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("generators")
-    void test_variateWithRepetition_with_2_elements_and_length_3(CombinatoricsGenerator generator) {
+    void test_variateWithRepetition_with_2_elements_and_length_3(CombinatorialGenerator generator) {
         Set<List<String>> expected = Set.of(
                 List.of("A", "A", "A"),
                 List.of("A", "A", "B"),
@@ -204,7 +204,7 @@ public class BasicGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("generators")
-    void test_variateWithRepetition_with_3_elements_and_length_2(CombinatoricsGenerator generator) {
+    void test_variateWithRepetition_with_3_elements_and_length_2(CombinatorialGenerator generator) {
         Set<List<String>> expected = Set.of(
                 List.of("A", "A"),
                 List.of("A", "B"),
@@ -222,7 +222,7 @@ public class BasicGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("generators")
-    void test_variateWithRepetition_with_3_elements_and_length_3(CombinatoricsGenerator generator) {
+    void test_variateWithRepetition_with_3_elements_and_length_3(CombinatorialGenerator generator) {
         Set<List<String>> expected = Set.of(
                 List.of("A", "A", "A"),
                 List.of("A", "A", "B"),
@@ -258,7 +258,7 @@ public class BasicGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("generators")
-    void test_combineWithoutRepetition_pick_2_out_of_3_elements(CombinatoricsGenerator generator) {
+    void test_combineWithoutRepetition_pick_2_out_of_3_elements(CombinatorialGenerator generator) {
         Set<Set<String>> expected = Set.of(
                 Set.of("A", "B"),
                 Set.of("A", "C"),
@@ -269,7 +269,7 @@ public class BasicGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("generators")
-    void test_combineWithoutRepetition_pick_2_out_of_4_elements(CombinatoricsGenerator generator) {
+    void test_combineWithoutRepetition_pick_2_out_of_4_elements(CombinatorialGenerator generator) {
         Set<Set<String>> expected = Set.of(
                 Set.of("A", "B"),
                 Set.of("A", "C"),
@@ -283,7 +283,7 @@ public class BasicGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("generators")
-    void test_combineWithoutRepetition_pick_3_out_of_4_elements(CombinatoricsGenerator generator) {
+    void test_combineWithoutRepetition_pick_3_out_of_4_elements(CombinatorialGenerator generator) {
         Set<Set<String>> expected = Set.of(
                 Set.of("A", "B", "C"),
                 Set.of("A", "B", "D"),
@@ -295,7 +295,7 @@ public class BasicGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("generators")
-    void test_combineWithRepetition_pick_2_out_of_3_elements(CombinatoricsGenerator generator) {
+    void test_combineWithRepetition_pick_2_out_of_3_elements(CombinatorialGenerator generator) {
         Set<Map<String, Integer>> expected = Set.of(
                 Map.of("A", 2),
                 Map.of("A", 1, "B", 1),
@@ -309,7 +309,7 @@ public class BasicGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("generators")
-    void test_combineWithRepetition_pick_2_out_of_4_elements(CombinatoricsGenerator generator) {
+    void test_combineWithRepetition_pick_2_out_of_4_elements(CombinatorialGenerator generator) {
         Set<Map<String, Integer>> expected = Set.of(
                 Map.of("A", 2),
                 Map.of("A", 1, "B", 1),
@@ -327,7 +327,7 @@ public class BasicGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("generators")
-    void test_combineWithRepetition_pick_3_out_of_4_elements(CombinatoricsGenerator generator) {
+    void test_combineWithRepetition_pick_3_out_of_4_elements(CombinatorialGenerator generator) {
         Set<Map<String, Integer>> expected = Set.of(
                 Map.of("A", 3),
                 Map.of("A", 2, "B", 1),

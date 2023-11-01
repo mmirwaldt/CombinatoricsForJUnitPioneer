@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public interface CombinatoricsGenerator {
+public interface CombinatorialGenerator {
     /**
      * generates permutations without repetition.
      * Permutations care about the order, i.e. the permutations "AB" and "BA" are different,

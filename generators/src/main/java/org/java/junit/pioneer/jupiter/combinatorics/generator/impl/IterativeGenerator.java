@@ -1,13 +1,13 @@
 package org.java.junit.pioneer.jupiter.combinatorics.generator.impl;
 
-import org.java.junit.pioneer.jupiter.combinatorics.generator.api.CombinatoricsGenerator;
+import org.java.junit.pioneer.jupiter.combinatorics.generator.api.CombinatorialGenerator;
 
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class IterativeGenerator implements CombinatoricsGenerator {
+public class IterativeGenerator implements CombinatorialGenerator {
     @Override
     public <E> Set<List<E>> permutateWithoutRepetition(Set<E> elements) {
         return variateWithoutRepetition(elements, elements.size());

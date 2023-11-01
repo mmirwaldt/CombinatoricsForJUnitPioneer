@@ -1,6 +1,6 @@
 package org.java.junit.pioneer.jupiter.combinatorics.samples.countingsort.impl;
 
-import org.java.junit.pioneer.jupiter.combinatorics.generator.api.CombinatoricsGenerator;
+import org.java.junit.pioneer.jupiter.combinatorics.generator.api.CombinatorialGenerator;
 import org.java.junit.pioneer.jupiter.combinatorics.generator.impl.IterativeGenerator;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ByteArrayCountingSorterTest {
     private final static ByteArrayCountingSorter byteArrayCountingSorter = new ByteArrayCountingSorter();
 
-    private final static CombinatoricsGenerator generator = new IterativeGenerator();
+    private final static CombinatorialGenerator generator = new IterativeGenerator();
 
     /**
      * Keys are the elements and values are the frequencies.

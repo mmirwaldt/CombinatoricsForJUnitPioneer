@@ -1,6 +1,6 @@
 package org.java.junit.pioneer.jupiter.combinatorics.samples.combinednumbers;
 
-import org.java.junit.pioneer.jupiter.combinatorics.generator.api.CombinatoricsGenerator;
+import org.java.junit.pioneer.jupiter.combinatorics.generator.api.CombinatorialGenerator;
 import org.java.junit.pioneer.jupiter.combinatorics.generator.impl.IterativeGenerator;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -16,7 +16,7 @@ import static org.java.junit.pioneer.jupiter.combinatorics.samples.combinednumbe
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LargestNumberCombinerTest {
-    private static final CombinatoricsGenerator generator = new IterativeGenerator();
+    private static final CombinatorialGenerator generator = new IterativeGenerator();
 
     private final static Set<String> NUMBERS = Set.of(0, 1, 2, 10, 11, 20, 21, 22, 101, 110, 111, 121)
             .stream()
