@@ -33,15 +33,11 @@ public class RecursiveGenerator implements CombinatoricsGenerator {
 
     @Override
     public <E> Set<Set<E>> combineWithoutRepetition(Set<E> elements, int length) {
-        Set<Set<E>> result = new HashSet<>();
-        RecursiveCombiner.combineWithoutRepetition(List.copyOf(elements), length, new ArrayDeque<>(), result);
-        return result;
+        return RecursiveCombiner.combineWithoutRepetition(elements, length);
     }
 
     @Override
     public <E> Set<Map<E, Integer>> combineWithRepetition(Set<E> elements, int length) {
-        Set<Map<E, Integer>> result = new HashSet<>();
-        RecursiveCombiner.combineWithRepetition(List.copyOf(elements), length, new HashMap<>(), 0, result);
-        return result;
+        return RecursiveCombiner.combineWithRepetition(elements, length);
     }
 }

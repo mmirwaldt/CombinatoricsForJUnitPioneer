@@ -1,8 +1,18 @@
 package org.java.junit.pioneer.jupiter.combinatorics.generator.impl;
 
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-public class IterativePermutator<E> extends AbstractPermutator<E> {
+public class IterativePermutator<E> {
+    private final static IterativeCombiner<Integer, Set<Integer>> ITERATIVE_COMBINER = createCombiner();
+
+    private int length;
+    private Set<Integer> allPositions;
+
     private E element;
     private int frequency;
 
@@ -26,11 +36,16 @@ public class IterativePermutator<E> extends AbstractPermutator<E> {
         ["A", "B", "A", "B", 4, "B", 6] for LB1 = [1, 3, 5]  and finally ["A", "B", "A", "B", "C", "B", ""C"] for LC = [4, 6]
         which leads to "ABABCBC".
          */
-    public Set<List<E>> permutate(Map<E, Integer> frequencyMap) {
+    public Set<List<E>> permutateWithRepetition(Map<E, Integer> elementsWithFrequencies) {
+        length = elementsWithFrequencies.values().stream().mapToInt(i -> i).sum();
+        allPositions = IntStream.range(0, length)
+                .boxed()
+                .collect(Collectors.toSet());
+
         /*
         Each element of the list is a permutation represented by a map with the elements as keys and the positions as elements.
          */
-        List<Map<E, Set<Integer>>> positionsMaps = generatePermutationMaps(frequencyMap);
+        List<Map<E, Set<Integer>>> positionsMaps = generatePermutationMaps(elementsWithFrequencies);
 
         return generatePermutationsFromPositionsMaps(positionsMaps);
     }
@@ -70,10 +85,17 @@ public class IterativePermutator<E> extends AbstractPermutator<E> {
         return permutationMap;
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private Set<List<E>> generatePermutationsFromPositionsMaps(List<Map<E, Set<Integer>>> positionsMaps) {
         Set<List<E>> result = new HashSet<>();
         for (Map<E, Set<Integer>> positionsMap : positionsMaps) {
-            result.add(generatePermutationFromPositionsMap(positionsMap));
+            List<E> permutation = new ArrayList<>(Collections.nCopies(length, null));
+            for (Map.Entry<E, Set<Integer>> positionEntry : positionsMap.entrySet()) {
+                for (int position : positionEntry.getValue()) {
+                    permutation.set(position, positionEntry.getKey());
+                }
+            }
+            result.add(permutation);
         }
         return result;
     }
@@ -85,5 +107,12 @@ public class IterativePermutator<E> extends AbstractPermutator<E> {
             unusedPositions.removeAll(positionsEntry.getValue());
         }
         return unusedPositions;
+    }
+
+    private static IterativeCombiner<Integer, Set<Integer>> createCombiner() {
+        Supplier<Set<Integer>> factory = HashSet::new;
+        Function<Set<Integer>, Set<Integer>> copyFactory = HashSet::new;
+        BiConsumer<Integer, Set<Integer>> elementConsumer = (e, set) -> set.add(e);
+        return new IterativeCombiner<>(factory, copyFactory, elementConsumer);
     }
 }
