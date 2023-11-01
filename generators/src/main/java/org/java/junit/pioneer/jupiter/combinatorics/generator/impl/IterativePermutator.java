@@ -2,7 +2,7 @@ package org.java.junit.pioneer.jupiter.combinatorics.generator.impl;
 
 import java.util.*;
 
-public class LoopingPermutator<E> extends AbstractPermutator<E> {
+public class IterativePermutator<E> extends AbstractPermutator<E> {
     private E element;
     private int frequency;
 
@@ -53,7 +53,7 @@ public class LoopingPermutator<E> extends AbstractPermutator<E> {
         for (Map<E, Set<Integer>> positionsMap : positionsMaps) {
             Set<Integer> unusedPositions = unusedPositionsInPermutation(positionsMap, allPositions);
             Set<Set<Integer>> positionsCombinations =
-                    loopingCombiner.combine(unusedPositions, frequency, false);
+                    ITERATIVE_COMBINER.combine(unusedPositions, frequency, false);
 
             for (Set<Integer> positionsCombination : positionsCombinations) {
                 Map<E, Set<Integer>> newPositionsMap =

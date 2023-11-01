@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 abstract class AbstractPermutator<E> {
-    protected final static LoopingCombiner<Integer, Set<Integer>> loopingCombiner = createCombiner();
+    protected final static IterativeCombiner<Integer, Set<Integer>> ITERATIVE_COMBINER = createCombiner();
 
     protected int length;
     protected Set<Integer> allPositions;
@@ -23,11 +23,11 @@ abstract class AbstractPermutator<E> {
 
     protected abstract Set<List<E>> permutate(Map<E, Integer> frequencyMap);
 
-    private static LoopingCombiner<Integer, Set<Integer>> createCombiner() {
+    private static IterativeCombiner<Integer, Set<Integer>> createCombiner() {
         Supplier<Set<Integer>> factory = HashSet::new;
         Function<Set<Integer>, Set<Integer>> copyFactory = HashSet::new;
         BiConsumer<Integer, Set<Integer>> elementConsumer = (e, set) -> set.add(e);
-        return new LoopingCombiner<>(factory, copyFactory, elementConsumer);
+        return new IterativeCombiner<>(factory, copyFactory, elementConsumer);
     }
 
     protected List<E> generatePermutationFromPositionsMap(Map<E, Set<Integer>> positionsMap) {

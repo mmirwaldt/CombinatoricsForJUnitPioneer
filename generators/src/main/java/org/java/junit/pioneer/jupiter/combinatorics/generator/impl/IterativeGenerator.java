@@ -6,10 +6,8 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-public class LoopingGenerator implements CombinatoricsGenerator {
+public class IterativeGenerator implements CombinatoricsGenerator {
     @Override
     public <E> Set<List<E>> permutateWithoutRepetition(Set<E> elements) {
         return variateWithoutRepetition(elements, elements.size());
@@ -17,17 +15,17 @@ public class LoopingGenerator implements CombinatoricsGenerator {
 
     @Override
     public <E> Set<List<E>> permutateWithRepetition(Map<E, Integer> elementsWithFrequencies) {
-        return new LoopingPermutator<E>().permutateWithRepetition(elementsWithFrequencies);
+        return new IterativePermutator<E>().permutateWithRepetition(elementsWithFrequencies);
     }
 
     @Override
     public <E> Set<List<E>> variateWithoutRepetition(Set<E> elements, int length) {
-        return LoopingVariator.variate(elements, length, false);
+        return IterativeVariator.variate(elements, length, false);
     }
 
     @Override
     public <E> Set<List<E>> variateWithRepetition(Set<E> elements, int length) {
-        return LoopingVariator.variate(elements, length, true);
+        return IterativeVariator.variate(elements, length, true);
     }
 
     @Override
@@ -35,7 +33,7 @@ public class LoopingGenerator implements CombinatoricsGenerator {
         Supplier<Set<E>> supplier = HashSet::new;
         Function<Set<E>, Set<E>> copyFactory = HashSet::new;
         BiConsumer<E, Set<E>> elementConsumer = (element, set) -> set.add(element);
-        return new LoopingCombiner<>(supplier, copyFactory, elementConsumer)
+        return new IterativeCombiner<>(supplier, copyFactory, elementConsumer)
                 .combine(elements, length, false);
     }
 
@@ -45,7 +43,7 @@ public class LoopingGenerator implements CombinatoricsGenerator {
         Function<Map<E, Integer>, Map<E, Integer>> copyFactory = HashMap::new;
         BiConsumer<E, Map<E, Integer>> elementConsumer = (element, map) ->
                 map.compute(element, (key, value) -> (value == null) ? 1 : value + 1);;
-        return new LoopingCombiner<>(supplier, copyFactory, elementConsumer)
+        return new IterativeCombiner<>(supplier, copyFactory, elementConsumer)
                 .combine(elements, length, true);
     }
 }

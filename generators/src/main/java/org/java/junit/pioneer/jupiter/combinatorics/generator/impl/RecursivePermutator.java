@@ -8,7 +8,7 @@ public class RecursivePermutator<E> extends AbstractPermutator<E> {
     private Map<E, Set<Integer>> positionsMap;
     private Set<List<E>> results;
 
-    // See the comment in permutateWithRepetition() in LoopingPermutator for the basic idea
+    // See the comment in permutateWithRepetition() in IterativePermutator for the basic idea
     public Set<List<E>> permutate(Map<E, Integer> frequencyMap) {
         remainingPositions = allPositions;
 
@@ -33,7 +33,7 @@ public class RecursivePermutator<E> extends AbstractPermutator<E> {
         Map.Entry<E, Integer> frequencyEntry = getFirstEntry();
         int frequency = frequencyEntry.getValue();
 
-        Set<Set<Integer>> positionsCombinations = loopingCombiner.combine(remainingPositions, frequency, false);
+        Set<Set<Integer>> positionsCombinations = ITERATIVE_COMBINER.combine(remainingPositions, frequency, false);
 
         for (Set<Integer> positionsCombination : positionsCombinations) {
             addPositionsMaps(positionsCombination, frequencyEntry);

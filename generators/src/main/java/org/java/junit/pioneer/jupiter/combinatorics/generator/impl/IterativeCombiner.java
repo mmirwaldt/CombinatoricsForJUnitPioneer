@@ -5,12 +5,12 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-class LoopingCombiner<E, C> {
+class IterativeCombiner<E, C> {
     private final Supplier<C> factory;
     private final Function<C, C> copyFactory;
     private final BiConsumer<E, C> elementConsumer;
 
-    public LoopingCombiner(Supplier<C> factory, Function<C, C> copyFactory, BiConsumer<E, C> elementConsumer) {
+    public IterativeCombiner(Supplier<C> factory, Function<C, C> copyFactory, BiConsumer<E, C> elementConsumer) {
         this.factory = factory;
         this.copyFactory = copyFactory;
         this.elementConsumer = elementConsumer;

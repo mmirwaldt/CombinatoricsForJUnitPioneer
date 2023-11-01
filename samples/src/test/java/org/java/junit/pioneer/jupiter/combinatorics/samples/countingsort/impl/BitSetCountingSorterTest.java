@@ -1,7 +1,7 @@
 package org.java.junit.pioneer.jupiter.combinatorics.samples.countingsort.impl;
 
 import org.java.junit.pioneer.jupiter.combinatorics.generator.api.CombinatoricsGenerator;
-import org.java.junit.pioneer.jupiter.combinatorics.generator.impl.LoopingGenerator;
+import org.java.junit.pioneer.jupiter.combinatorics.generator.impl.IterativeGenerator;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BitSetCountingSorterTest {
     private final static BitSetCountingSorter bitSetCountingSorter = new BitSetCountingSorter();
-    private final static CombinatoricsGenerator generator = new LoopingGenerator();
+    private final static CombinatoricsGenerator generator = new IterativeGenerator();
     private final static List<Integer> EXPECTED_6_ELEMENTS = List.of(1, 2, 4, 5, 6, 8);
     private final static Set<Integer> LIST_OF_7_ELEMENTS = Set.of(0, 1, 2, 4, 5, 6, 8);
 

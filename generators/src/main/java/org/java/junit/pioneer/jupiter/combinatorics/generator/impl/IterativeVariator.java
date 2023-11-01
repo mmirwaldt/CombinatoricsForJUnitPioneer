@@ -2,7 +2,7 @@ package org.java.junit.pioneer.jupiter.combinatorics.generator.impl;
 
 import java.util.*;
 
-public class LoopingVariator {
+public class IterativeVariator {
     public static <E> Set<List<E>> variate(Set<E> elements, int k, boolean withRepetition) {
         Set<List<E>> result = new HashSet<>();
         result.add(Collections.emptyList()); // avoid the edge case of an empty list as result

@@ -18,12 +18,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class BasicGeneratorTest {
     private final static BruteForceGenerator bruteForceGenerator = new BruteForceGenerator();
-    private final static LoopingGenerator loopingGenerator = new LoopingGenerator();
+    private final static IterativeGenerator ITERATIVE_GENERATOR = new IterativeGenerator();
 
     private final static RecursiveGenerator recursiveGenerator = new RecursiveGenerator();
 
     public static Stream<Arguments> generators() {
-        return Stream.of(Arguments.of(bruteForceGenerator), Arguments.of(loopingGenerator), Arguments.of(recursiveGenerator));
+        return Stream.of(Arguments.of(bruteForceGenerator), Arguments.of(ITERATIVE_GENERATOR), Arguments.of(recursiveGenerator));
     }
     
     @ParameterizedTest
