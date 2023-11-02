@@ -38,11 +38,19 @@ public class RecursiveCombiner {
             int start = 0;
             for (E element : elements) {
                 List<E> remainingElements = elements.subList(start, elements.size());
-                combination.compute(element, (key, value) -> (value == null) ? 1 : value + 1);
+                incrementFrequencyForElement(combination, element);
                 combineWithRepetition(remainingElements, k, combination, size + 1, results);
-                combination.compute(element, (key, value) -> (value == null || value == 1) ? null : value - 1);
+                decrementFrequencyForElement(combination, element);
                 start++;
             }
         }
+    }
+
+    private static <E> void incrementFrequencyForElement(Map<E, Integer> combination, E element) {
+        combination.compute(element, (key, value) -> (value == null) ? 1 : value + 1);
+    }
+
+    private static <E> void decrementFrequencyForElement(Map<E, Integer> combination, E element) {
+        combination.compute(element, (key, value) -> (value == null || value == 1) ? null : value - 1);
     }
 }
