@@ -1,6 +1,6 @@
-package org.java.junit.pioneer.jupiter.combinatorial.generator.impl;
+package org.java.junit.pioneer.jupiter.combinatorial.generators.impl;
 
-import org.java.junit.pioneer.jupiter.combinatorial.generator.api.CombinatorialGenerator;
+import org.java.junit.pioneer.jupiter.combinatorial.generators.api.CombinatorialGenerator;
 
 import java.util.*;
 import java.util.function.BiConsumer;

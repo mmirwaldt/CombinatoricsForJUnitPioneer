@@ -1,4 +1,4 @@
-package org.java.junit.pioneer.jupiter.combinatorial.generator.api;
+package org.java.junit.pioneer.jupiter.combinatorial.generators.api;
 
 import java.util.List;
 import java.util.Map;

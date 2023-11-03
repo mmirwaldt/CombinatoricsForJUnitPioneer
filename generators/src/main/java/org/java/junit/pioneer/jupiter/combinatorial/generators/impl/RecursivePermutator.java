@@ -1,4 +1,4 @@
-package org.java.junit.pioneer.jupiter.combinatorial.generator.impl;
+package org.java.junit.pioneer.jupiter.combinatorial.generators.impl;
 
 import java.util.*;
 import java.util.stream.Collectors;

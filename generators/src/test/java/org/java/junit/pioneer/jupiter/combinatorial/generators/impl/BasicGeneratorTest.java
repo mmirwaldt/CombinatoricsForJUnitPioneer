@@ -1,6 +1,6 @@
-package org.java.junit.pioneer.jupiter.combinatorial.generator.impl;
+package org.java.junit.pioneer.jupiter.combinatorial.generators.impl;
 
-import org.java.junit.pioneer.jupiter.combinatorial.generator.api.CombinatorialGenerator;
+import org.java.junit.pioneer.jupiter.combinatorial.generators.api.CombinatorialGenerator;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
