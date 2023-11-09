@@ -11,6 +11,7 @@
     <modules>
         <module>generators</module>
         <module>samples</module>
+        <module>numbers</module>
     </modules>
 
     <properties>
