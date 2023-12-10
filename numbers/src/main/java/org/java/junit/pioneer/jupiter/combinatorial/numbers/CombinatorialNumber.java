@@ -10,7 +10,7 @@ public abstract class CombinatorialNumber implements Comparable<CombinatorialNum
     protected byte base;
 
     public CombinatorialNumber(int base, int length) {
-        checkParameters(base, length);
+        checkBase(base, length);
         this.digits = new byte[length];
         this.base = (byte) base;
     }
@@ -63,25 +63,10 @@ public abstract class CombinatorialNumber implements Comparable<CombinatorialNum
         return 0;
     }
 
-    private static void checkParameters(int base, int length) {
-        checkBase(base, length);
-        checkLength(base, length);
-    }
-
     private static void checkBase(int base, int length) {
         if (base < 2 || Byte.MAX_VALUE < base) {
             throw new IllegalArgumentException("The number of elements must lie in [1, " + Byte.MAX_VALUE + "]" +
                     " and may not be " + length + "!");
-        }
-    }
-
-    private static void checkLength(int base, int length) {
-        if (length < 1) {
-            throw new IllegalArgumentException("The length must be positive, i.e. it must larger than 0, and not be " + length);
-        }
-        if (base < length) {
-            throw new IllegalArgumentException("No variations without repetition possible for the length " + length
-                    + " with " + base + " elements. The length must be smaller or equal than the number of elements");
         }
     }
 

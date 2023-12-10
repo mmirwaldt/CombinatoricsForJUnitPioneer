@@ -14,6 +14,7 @@ public class VariationWithoutRepetitionNumber extends CombinatorialNumber {
 
     public VariationWithoutRepetitionNumber(int base, int length) {
         super(base, length);
+        checkLength(base, length);
         initDigits(length);
         sortedUnusedDigitsForPlace = new ArrayList<>(base);
         indicesStack = new ArrayDeque<>(nCopies(length, 0));
@@ -94,5 +95,15 @@ public class VariationWithoutRepetitionNumber extends CombinatorialNumber {
         int oldDigit = digits[indicesStack.size()];
         int insertIndex = Collections.binarySearch(sortedUnusedDigitsForPlace, oldDigit);
         sortedUnusedDigitsForPlace.add((-insertIndex) - 1, oldDigit);
+    }
+
+    private static void checkLength(int base, int length) {
+        if (length < 1) {
+            throw new IllegalArgumentException("The length must be positive, i.e. it must larger than 0, and not be " + length);
+        }
+        if (base < length) {
+            throw new IllegalArgumentException("No variations without repetition possible for the length " + length
+                    + " with " + base + " elements. The length must be smaller or equal than the number of elements");
+        }
     }
 }
