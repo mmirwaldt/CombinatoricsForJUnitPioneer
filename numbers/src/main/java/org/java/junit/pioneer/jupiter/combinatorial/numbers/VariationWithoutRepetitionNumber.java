@@ -1,24 +1,20 @@
 package org.java.junit.pioneer.jupiter.combinatorial.numbers;
 
-import java.util.*;
-
-import static java.util.Collections.nCopies;
+import java.util.BitSet;
 
 public class VariationWithoutRepetitionNumber extends CombinatorialNumber {
-    private final BitSet sortedUnusedDigitsForPlace;
-
-    /**
-     * stack for indices of sortedUnusedDigits.
-     */
-    private final Deque<Integer> indicesStack;
+    private final BitSet unusedDigits;
+    private final byte[] placesStack;
+    private int stackPointer;
 
     public VariationWithoutRepetitionNumber(int base, int length) {
         super(base, length);
         checkLength(base, length);
         initDigits(length);
-        sortedUnusedDigitsForPlace = new BitSet(base);
-        sortedUnusedDigitsForPlace.set(length, base);
-        indicesStack = new ArrayDeque<>(nCopies(length, 0));
+        unusedDigits = new BitSet(base);
+        unusedDigits.set(length, base);
+        placesStack = new byte[length];
+        stackPointer = length - 1;
     }
 
     private void initDigits(int length) {
@@ -40,7 +36,7 @@ public class VariationWithoutRepetitionNumber extends CombinatorialNumber {
     }
 
     private void carryOver() {
-        for (int i = indicesStack.size(); i < digits.length; i++) {
+        for (int i = stackSize(); i < digits.length; i++) {
             useNextDigitAt(0);
         }
     }
@@ -54,7 +50,7 @@ public class VariationWithoutRepetitionNumber extends CombinatorialNumber {
     private int unusedDigitAt(int nextIndex) {
         int ones = 0;
         for (int i = 0; i < base; i++) {
-            if(sortedUnusedDigitsForPlace.get(i)) {
+            if(unusedDigits.get(i)) {
                 ones++;
             }
             if(ones == nextIndex + 1) {
@@ -65,12 +61,12 @@ public class VariationWithoutRepetitionNumber extends CombinatorialNumber {
     }
 
     private void iterateForward(int nextIndex) {
-        indicesStack.push(nextIndex);
+        push(nextIndex);
     }
 
     private void useDigit(int unusedDigit) {
-        digits[indicesStack.size()] = (byte) unusedDigit;
-        sortedUnusedDigitsForPlace.clear(unusedDigit);
+        digits[stackSize()] = (byte) unusedDigit;
+        unusedDigits.clear(unusedDigit);
     }
 
     private int lastNonCarryOverIndex() {
@@ -87,20 +83,36 @@ public class VariationWithoutRepetitionNumber extends CombinatorialNumber {
     }
 
     private boolean canCarryOver() {
-        return !indicesStack.isEmpty();
+        return !isStackEmpty();
     }
 
     private boolean hasUnusedDigitFor(int index) {
-        return index <= sortedUnusedDigitsForPlace.cardinality();
+        return index <= unusedDigits.cardinality();
     }
 
     private int nextIndex() {
-        return indicesStack.pop() + 1;
+        return pop() + 1;
     }
 
     private void reuseLastDigit() {
-        int oldDigit = digits[indicesStack.size()];
-        sortedUnusedDigitsForPlace.set(oldDigit);
+        int oldDigit = digits[stackSize()];
+        unusedDigits.set(oldDigit);
+    }
+
+    private int stackSize() {
+        return stackPointer + 1;
+    }
+
+    private boolean isStackEmpty() {
+        return stackPointer == -1;
+    }
+
+    private int pop() {
+        return placesStack[stackPointer--];
+    }
+
+    private void push(int i) {
+        placesStack[++stackPointer] = (byte) i;
     }
 
     private static void checkLength(int base, int length) {
