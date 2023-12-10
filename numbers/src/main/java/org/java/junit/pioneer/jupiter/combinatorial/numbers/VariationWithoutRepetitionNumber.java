@@ -4,7 +4,7 @@ import java.util.BitSet;
 
 public class VariationWithoutRepetitionNumber extends CombinatorialNumber {
     private final BitSet unusedDigits;
-    private final byte[] placesStack;
+    private final byte[] unusedDigitsIndices;
     private int stackPointer;
 
     public VariationWithoutRepetitionNumber(int base, int length) {
@@ -13,7 +13,7 @@ public class VariationWithoutRepetitionNumber extends CombinatorialNumber {
         initDigits(length);
         unusedDigits = new BitSet(base);
         unusedDigits.set(length, base);
-        placesStack = new byte[length];
+        unusedDigitsIndices = new byte[length];
         stackPointer = length - 1;
     }
 
@@ -25,94 +25,85 @@ public class VariationWithoutRepetitionNumber extends CombinatorialNumber {
 
     @Override
     public void increment() {
-        nonCarryOver();
-        carryOver();
+        int firstNextUnusedDigitIndex = clearPlacesWithNoNextUnusedDigit();
+        setNextDigitForFirstPlace(firstNextUnusedDigitIndex);
+        setNextDigitsForNextPlaces();
     }
 
-    private void nonCarryOver() {
-        int nextNonCarryOverIndex = lastNonCarryOverIndex();
-        reuseLastDigit();
-        useNextDigitAt(nextNonCarryOverIndex);
+    private void setNextDigitForFirstPlace(int nextUnusedDigitIndex) {
+        int oldDigit = digits[currentPlace()];
+        unusedDigits.set(oldDigit);
+        int newDigit = nextUnusedDigit(nextUnusedDigitIndex);
+        digits[currentPlace()] = (byte) newDigit;
+        unusedDigits.clear(newDigit);
+        pushUnusedDigitIndex(nextUnusedDigitIndex);
     }
 
-    private void carryOver() {
-        for (int i = stackSize(); i < digits.length; i++) {
-            useNextDigitAt(0);
+    private void setNextDigitsForNextPlaces() {
+        for (int i = currentPlace(); i < digits.length; i++) {
+            int firstUnusedDigit = nextUnusedDigit(0);
+            digits[currentPlace()] = (byte) firstUnusedDigit;
+            unusedDigits.clear(firstUnusedDigit);
+            pushUnusedDigitIndex(0);
         }
     }
 
-    private void useNextDigitAt(int nextIndex) {
-        int unusedDigit = unusedDigitAt(nextIndex);
-        useDigit(unusedDigit);
-        iterateForward(nextIndex);
-    }
-
-    private int unusedDigitAt(int nextIndex) {
-        int ones = 0;
-        for (int i = 0; i < base; i++) {
-            if(unusedDigits.get(i)) {
-                ones++;
-            }
-            if(ones == nextIndex + 1) {
-                return i;
-            }
-        }
-        throw new IllegalArgumentException("Cannot find a 1 for index " + nextIndex);
-    }
-
-    private void iterateForward(int nextIndex) {
-        push(nextIndex);
-    }
-
-    private void useDigit(int unusedDigit) {
-        digits[stackSize()] = (byte) unusedDigit;
-        unusedDigits.clear(unusedDigit);
-    }
-
-    private int lastNonCarryOverIndex() {
-        int index = nextIndex();
-        while (!hasUnusedDigitFor(index)) {
+    private int clearPlacesWithNoNextUnusedDigit() {
+        int nextUnusedDigitIndex = popUnusedDigitIndex() + 1;
+        while (hasNoNextUnusedDigit(nextUnusedDigitIndex)) {
             if (canCarryOver()) {
-                reuseLastDigit();
-                index = nextIndex();
+                int oldDigit = digits[currentPlace()];
+                unusedDigits.set(oldDigit);
+                nextUnusedDigitIndex = popUnusedDigitIndex() + 1;
             } else {
                 throw new ArithmeticException("Overflow of number with base " + base + "!");
             }
         }
-        return index;
+        return nextUnusedDigitIndex;
     }
 
     private boolean canCarryOver() {
-        return !isStackEmpty();
+        return isPlace(previousPlace());
     }
 
-    private boolean hasUnusedDigitFor(int index) {
-        return index <= unusedDigits.cardinality();
+    private boolean hasNoNextUnusedDigit(int nextUnusedDigitIndex) {
+        return maxUnusedDigits() < nextUnusedDigitIndex;
     }
 
-    private int nextIndex() {
-        return pop() + 1;
+    private int previousPlace() {
+        return stackPointer;
     }
 
-    private void reuseLastDigit() {
-        int oldDigit = digits[stackSize()];
-        unusedDigits.set(oldDigit);
-    }
-
-    private int stackSize() {
+    private int currentPlace() {
         return stackPointer + 1;
     }
 
-    private boolean isStackEmpty() {
-        return stackPointer == -1;
+    private boolean isPlace(int place) {
+        return 0 <= place;
     }
 
-    private int pop() {
-        return placesStack[stackPointer--];
+    private int nextUnusedDigit(int nextIndex) {
+        int ones = 0;
+        for (int i = unusedDigits.nextSetBit(0); 0 <= i && i < base; ) {
+            ones++;
+            if(ones == nextIndex + 1) {
+                return i;
+            }
+            i = unusedDigits.nextSetBit(i + 1);
+        }
+        throw new IllegalArgumentException("Cannot find a 1 for index " + nextIndex);
     }
 
-    private void push(int i) {
-        placesStack[++stackPointer] = (byte) i;
+    private int maxUnusedDigits() {
+        return unusedDigits.cardinality();
+    }
+
+    private int popUnusedDigitIndex() {
+        return unusedDigitsIndices[stackPointer--];
+    }
+
+    private void pushUnusedDigitIndex(int i) {
+        unusedDigitsIndices[++stackPointer] = (byte) i;
     }
 
     private static void checkLength(int base, int length) {
