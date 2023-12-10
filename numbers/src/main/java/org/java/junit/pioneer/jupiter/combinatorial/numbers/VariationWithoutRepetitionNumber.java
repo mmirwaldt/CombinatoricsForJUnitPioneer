@@ -5,7 +5,7 @@ import java.util.*;
 import static java.util.Collections.nCopies;
 
 public class VariationWithoutRepetitionNumber extends CombinatorialNumber {
-    private final List<Integer> sortedUnusedDigitsForPlace;
+    private final BitSet sortedUnusedDigitsForPlace;
 
     /**
      * stack for indices of sortedUnusedDigits.
@@ -16,20 +16,14 @@ public class VariationWithoutRepetitionNumber extends CombinatorialNumber {
         super(base, length);
         checkLength(base, length);
         initDigits(length);
-        sortedUnusedDigitsForPlace = new ArrayList<>(base);
+        sortedUnusedDigitsForPlace = new BitSet(base);
+        sortedUnusedDigitsForPlace.set(length, base);
         indicesStack = new ArrayDeque<>(nCopies(length, 0));
-        initUnusedDigitsForLastPlace(base, length);
     }
 
     private void initDigits(int length) {
         for (int i = 0; i < length; i++) {
             digits[i] = (byte) i;
-        }
-    }
-
-    private void initUnusedDigitsForLastPlace(int base, int length) {
-        for (int i = length; i < base; i++) {
-            sortedUnusedDigitsForPlace.add(i);
         }
     }
 
@@ -52,9 +46,22 @@ public class VariationWithoutRepetitionNumber extends CombinatorialNumber {
     }
 
     private void useNextDigitAt(int nextIndex) {
-        int unusedDigit = sortedUnusedDigitsForPlace.get(nextIndex);
+        int unusedDigit = unusedDigitAt(nextIndex);
         useDigit(unusedDigit);
         iterateForward(nextIndex);
+    }
+
+    private int unusedDigitAt(int nextIndex) {
+        int ones = 0;
+        for (int i = 0; i < base; i++) {
+            if(sortedUnusedDigitsForPlace.get(i)) {
+                ones++;
+            }
+            if(ones == nextIndex + 1) {
+                return i;
+            }
+        }
+        throw new IllegalArgumentException("Cannot find a 1 for index " + nextIndex);
     }
 
     private void iterateForward(int nextIndex) {
@@ -63,7 +70,7 @@ public class VariationWithoutRepetitionNumber extends CombinatorialNumber {
 
     private void useDigit(int unusedDigit) {
         digits[indicesStack.size()] = (byte) unusedDigit;
-        sortedUnusedDigitsForPlace.remove((Integer) unusedDigit);
+        sortedUnusedDigitsForPlace.clear(unusedDigit);
     }
 
     private int lastNonCarryOverIndex() {
@@ -84,7 +91,7 @@ public class VariationWithoutRepetitionNumber extends CombinatorialNumber {
     }
 
     private boolean hasUnusedDigitFor(int index) {
-        return index <= sortedUnusedDigitsForPlace.size();
+        return index <= sortedUnusedDigitsForPlace.cardinality();
     }
 
     private int nextIndex() {
@@ -93,8 +100,7 @@ public class VariationWithoutRepetitionNumber extends CombinatorialNumber {
 
     private void reuseLastDigit() {
         int oldDigit = digits[indicesStack.size()];
-        int insertIndex = Collections.binarySearch(sortedUnusedDigitsForPlace, oldDigit);
-        sortedUnusedDigitsForPlace.add((-insertIndex) - 1, oldDigit);
+        sortedUnusedDigitsForPlace.set(oldDigit);
     }
 
     private static void checkLength(int base, int length) {
