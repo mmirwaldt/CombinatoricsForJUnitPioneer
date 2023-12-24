@@ -1,6 +1,6 @@
 package org.java.junit.pioneer.jupiter.combinatorial.numbers;
 
-public class CombinationWithoutRepetitionNumber extends CombinatorialNumber {
+public class CombinationWithoutRepetitionNumber extends AbstractCombinatorialNumber<CombinationWithoutRepetitionNumber> {
     public CombinationWithoutRepetitionNumber(int base, int length) {
         super(base, length);
         for (int i = 0; i < length; i++) {
@@ -20,5 +20,16 @@ public class CombinationWithoutRepetitionNumber extends CombinatorialNumber {
             }
         }
         throw new ArithmeticException("Overflow of number with base " + base + "!");
+    }
+
+    @Override
+    public boolean isMax() {
+        int highestDigit = base - 1;
+        for (int i = length() - 1; 0 <= i; i--) {
+            if(digit(i) < highestDigit--) {
+                return false;
+            }
+        }
+        return true;
     }
 }

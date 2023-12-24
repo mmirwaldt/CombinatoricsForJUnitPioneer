@@ -2,9 +2,9 @@ package org.java.junit.pioneer.jupiter.combinatorial.numbers;
 
 import java.util.BitSet;
 
-public class VariationWithoutRepetitionNumber extends CombinatorialNumber {
+public class VariationWithoutRepetitionNumber extends AbstractCombinatorialNumber<VariationWithoutRepetitionNumber> {
     private final BitSet unusedDigits;
-    private final byte[] unusedDigitsIndices;
+    private final byte[] unusedDigitsIndicesStack;
     private int stackPointer;
 
     public VariationWithoutRepetitionNumber(int base, int length) {
@@ -13,7 +13,7 @@ public class VariationWithoutRepetitionNumber extends CombinatorialNumber {
         initDigits(length);
         unusedDigits = new BitSet(base);
         unusedDigits.set(length, base);
-        unusedDigitsIndices = new byte[length];
+        unusedDigitsIndicesStack = new byte[length];
         stackPointer = length - 1;
     }
 
@@ -28,6 +28,11 @@ public class VariationWithoutRepetitionNumber extends CombinatorialNumber {
         int firstNextUnusedDigitIndex = clearPlacesWithNoNextUnusedDigit();
         setNextDigitForFirstPlace(firstNextUnusedDigitIndex);
         setNextDigitsForNextPlaces();
+    }
+
+    @Override
+    public boolean isMax() {
+        return isMax(false);
     }
 
     private void setNextDigitForFirstPlace(int nextUnusedDigitIndex) {
@@ -99,11 +104,11 @@ public class VariationWithoutRepetitionNumber extends CombinatorialNumber {
     }
 
     private int popUnusedDigitIndex() {
-        return unusedDigitsIndices[stackPointer--];
+        return unusedDigitsIndicesStack[stackPointer--];
     }
 
     private void pushUnusedDigitIndex(int i) {
-        unusedDigitsIndices[++stackPointer] = (byte) i;
+        unusedDigitsIndicesStack[++stackPointer] = (byte) i;
     }
 
     private static void checkLength(int base, int length) {

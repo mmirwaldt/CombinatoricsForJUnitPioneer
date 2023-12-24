@@ -1,6 +1,6 @@
 package org.java.junit.pioneer.jupiter.combinatorial.numbers;
 
-public class VariationWithRepetitionNumber extends CombinatorialNumber {
+public class VariationWithRepetitionNumber extends AbstractCombinatorialNumber<VariationWithRepetitionNumber> {
     public VariationWithRepetitionNumber(int base, int length) {
         super(base, length);
     }
@@ -17,5 +17,10 @@ public class VariationWithRepetitionNumber extends CombinatorialNumber {
             }
         }
         throw new ArithmeticException("Overflow of number with base " + base + "!");
+    }
+
+    @Override
+    public boolean isMax() {
+        return isMax(true);
     }
 }
